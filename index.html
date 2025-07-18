@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kéyy Galaxy Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #050010, #0a001a);
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Aurora */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      background: radial-gradient(ellipse at center, rgba(153, 102, 255, 0.15), transparent),
+                  radial-gradient(ellipse at center, rgba(255, 80, 200, 0.1), transparent);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: -3;
+      animation: auroraFlow 20s ease-in-out infinite alternate;
+    }
+
+    body::before { top: 0; }
+    body::after {
+      bottom: 0;
+      transform: rotate(180deg);
+      animation-delay: 10s;
+    }
+
+    @keyframes auroraFlow {
+      0% { transform: translateX(0); opacity: 0.4; }
+      100% { transform: translateX(60px); opacity: 0.6; }
+    }
+
+    /* Bio Card */
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    
+
+    .name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #d81b60;
+      margin-bottom: 0.5rem;
+    }
+
+    .bio {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+      white-space: pre-line;
+    }
+
+    .socials a {
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    .socials img {
+      width: 28px;
+      height: 28px;
+      transition: transform 0.3s ease;
+    }
+
+    .socials img:hover {
+      transform: scale(1.15);
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -2;
+    }
+    .avatar-ring {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-spin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: conic-gradient(from 0deg, #f97316, #fb7185, #9333ea, #f97316);
+
+  animation: spin 2s linear infinite;
+  z-index: 1;
+  filter: blur(1px) brightness(1.2);
+  box-shadow: 0 0 12px rgba(255, 192, 203, 0.2);
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  z-index: 2;
+  position: relative;
+  background: white;
+  padding: 2px;
+}
+  
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.see-full {
+  margin-top: 1.2rem;
+}
+
+.see-full button {
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #c084fc, #f9a8d4);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px rgba(249, 168, 212, 0.4);
+}
+
+.see-full button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(200, 128, 255, 0.6);
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fef2f2;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 20px;
+  padding: 1.8rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  color: #333;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #a21caf; /* ungu pinky kayak pict */
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.modal-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f9a8d4;
+  margin-bottom: 0.5rem;
+}
+
+.modal-username {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #be185d;
+}
+
+.modal-tags {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.modal-section {
+  margin-top: 1.2rem;
+}
+
+.modal-section h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #9d174d;
+}
+
+.modal-section p {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.connection-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.connection-links a {
+  padding: 6px 12px;
+  
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.connection-links a:hover {
+  background: #fda4af;
+}
+.card {
+  background: #fef2f2;
+  padding: 1.8rem;
+  border-radius: 20px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.mini-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid transparent;
+
+
+  margin-bottom: 0.5rem;
+}
+.rainbow-border {
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(
+      135deg,
+      #ff4d94,  /* hot pink */
+      #ffcc00,  /* yellow */
+      #33ccff,  /* sky blue */
+      #9966ff,  /* violet */
+      #ff6699,  /* bubblegum */
+      #00e6e6,  /* cyan */
+      #ff4d94   /* loop back to pink */
+    ) border-box;
+  background-size: 400% 400%;
+  animation: rainbowMoveSmooth 12s ease-in-out infinite;
+  box-shadow: 0 0 16px rgba(255, 128, 212, 0.7);
+
+}
+
+@keyframes rainbowMoveSmooth {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+.card-username {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #be185d;
+}
+
+.card-tags {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.card-about p {
+  font-size: 0.88rem;
+  color: #444;
+  margin-bottom: 1.2rem;
+  line-height: 1.4;
+}
+.music-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1.2rem;
+}
+
+#progress {
+  width: 180px;
+  height: 6px;
+  appearance: none;
+  border-radius: 9999px;
+  background: #f9a8d4;
+  outline: none;
+  cursor: pointer;
+}
+
+#progress::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #9333ea;
+  cursor: pointer;
+  appearance: none;
+}
+
+.play-btn {
+  background: linear-gradient(135deg, #f9a8d4, #c084fc);
+  border: none;
+  color: white;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.play-btn:hover {
+  transform: scale(1.05);
+}
+.song-title {
+  font-size: 0.85rem;
+  color: #be185d;
+  font-weight: 500;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.fav-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.fav-gallery img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #f9a8d4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.fav-gallery img:hover {
+  transform: scale(1.05);
+}
+.food-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+.food-item {
+  text-align: center;
+  width: 90px;
+}
+
+.food-item img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #f9a8d4;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.food-item img:hover {
+  transform: scale(1.05);
+}
+
+.food-item p {
+  font-size: 0.75rem;
+  color: #6b21a8;
+  margin-top: 4px;
+}
+.music-list {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 6px;
+}
+
+.music-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fdf4ff; /* pink muda */
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 0 10px rgba(147, 197, 253, 0.4); /* biru glow */
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.music-item:hover {
+  background: #e0f2fe; /* biru muda pastel */
+  box-shadow: 0 0 16px rgba(147, 197, 253, 0.5); /* biru glow */
+}
+
+
+.music-item img {
+  border: 2px solid transparent;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #f9a8d4, #93c5fd);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.music-item .title {
+  font-size: 0.9rem;
+  color: #6b21a8;
+  font-weight: 500;
+}
+.cover-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.music-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #f9a8d4;
+}
+
+.play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.cover-wrapper:hover .play-overlay {
+  opacity: 1;
+  cursor: pointer;
+}
+.profile-banner {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  margin-bottom: -50px; /* Biar avatar numpang kayak Discord */
+}
+.fav-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.fav-emoji {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  font-size: 20px;
+  z-index: 2;
+  transform: rotate(-25deg); /* Biar miring */
+  transition: all 0.2s ease;
+}
+
+.fav-bubble-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #c084fc, #f9a8d4); /* sama kayak see full */
+  color: white;
+  font-weight: 400;
+  padding: 6px 14px;
+  border-radius: 18px;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(192, 132, 252, 0.3);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+
+
+
+
+/* Hover tombol = emoji juga ikut gerak */
+.fav-container:hover .fav-bubble-button {
+  background: linear-gradient(135deg, #e0aaff, #a5f3fc);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(147, 197, 253, 0.4);
+}
+
+
+.fav-container:hover .fav-emoji {
+  transform: rotate(-25deg) translateY(-2px) scale(1.1);
+}
+
+
+/* Modal khusus Pict */
+#pict-modal {
+  display: none;
+  position: fixed;
+  z-index: 99;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  align-items: center;
+}
+
+.pict-modal-content {
+  background: linear-gradient(135deg, #fce7f3, #e0f2fe);
+  margin: 80px auto;
+  padding: 24px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 0 12px rgba(255, 192, 203, 0.4), 0 0 12px rgba(147, 197, 253, 0.3);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.pict-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #a21caf;
+}
+
+.album-list-pict {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.album-card-pict {
+  background: linear-gradient(135deg, #f9a8d4, #c084fc); /* pink ke ungu */
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 0 10px rgba(249, 168, 212, 0.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+
+.album-card-pict:hover {
+  background: linear-gradient(135deg, #e0aaff, #a5f3fc); /* biru-pink pastel */
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(147, 197, 253, 0.6);
+}
+
+
+.album-photos-pict {
+  text-align: center;
+}
+
+.photo-grid-pict {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+
+.photo-grid-pict img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+
+.photo-grid-pict img:hover {
+  transform: scale(1.05);
+}
+
+.album-photos-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-top: 10px;
+}
+
+.album-photos-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.album-photos-scroll::-webkit-scrollbar-thumb {
+  background: #f9a8d4;
+  border-radius: 6px;
+}
+
+/* Fullscreen Image Viewer */
+#full-image-viewer {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+}
+
+#full-image-viewer img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  animation: zoomIn 0.3s ease;
+}
+
+#full-image-viewer span {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.game-list {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 8px;
+}
+
+.game-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #ffe4e6;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: background 0.2s;
+}
+
+.game-item:hover {
+  background: #fbcfe8;
+}
+
+.game-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: white;
+}
+
+.game-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #6b21a8;
+}
+
+.game-id {
+  font-size: 0.85rem;
+  color: #555;
+}
+#gameModal .modal-content {
+  background: linear-gradient(135deg, #fce7f3, #e0f2fe); /* pink ke biru */
+  color: #4a044e;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.game-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #fdf4ff; /* pink muda banget */
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 0 10px rgba(147, 197, 253, 0.4); /* biru glow */
+  transition: all 0.2s;
+}
+
+.game-item:hover {
+  background: #fbcfe8;
+  box-shadow: 0 0 16px rgba(216, 180, 254, 0.6); /* pink glow */
+}
+.game-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #9333ea; /* ungu cute */
+}
+
+.game-id {
+  font-size: 0.85rem;
+   /* biru lembut color: #2563eb; */
+}
+.modal-box-pinkblue {
+  background: linear-gradient(135deg, #fce7f3, #e0f2fe);
+  color: #4a044e;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  padding: 1.8rem;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.modal-box-pinkblue h3 {
+  color: #be185d;
+}
+
+.modal-box-pinkblue::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-box-pinkblue::-webkit-scrollbar-thumb {
+  background: #f9a8d4;
+  border-radius: 6px;
+}
+.modal-box-pinkblue {
+  background: linear-gradient(135deg, #fce7f3, #e0f2fe);
+  box-shadow: 0 0 12px rgba(255, 192, 203, 0.4), 0 0 12px rgba(147, 197, 253, 0.3);
+}
+.easter-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('https://i.pinimg.com/originals/52/83/59/5283594dd6b1d0dd4b8a59c723a35024.gif');
+  background-size: cover; /* ini kuncinya biar gak kotak-kotak */
+  background-color: #fff0f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.easter-modal.hidden {
+  display: none;
+}
+
+.easter-content {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  animation: fadeIn 0.5s ease;
+  max-width: 320px;
+}
+
+.easter-content h2 {
+  font-size: 1.4rem;
+  color: #db2777;
+  margin-bottom: 0.5rem;
+}
+
+.easter-content p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.easter-photo {
+  width: 100%;
+  max-width: 250px;
+  border-radius: 14px;
+  box-shadow: 0 0 10px rgba(255,192,203,0.5);
+}
+
+/* Animasi bunga jatuh */
+.flower {
+  position: fixed;
+  top: -50px;
+  left: calc(100% * var(--x));
+  width: 30px;
+  height: 30px;
+  background-image: url('flower.png');
+  background-size: cover;
+  animation: fall 3s linear forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+.easter-lyrics {
+  font-size: 0.95rem;
+  color: #6b21a8;
+  margin-top: 16px;
+  line-height: 1.8;
+  font-style: italic;
+  white-space: pre-line;
+  text-align: left;
+  position: relative;
+  padding-right: 12px;
+}
+
+
+.typing-line {
+  display: inline;
+  word-break: break-word;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #6b21a8;
+  line-height: 1.8;
+  font-style: italic;
+  font-family: monospace;
+}
+
+.typing-line .cursor {
+  animation: blink 1s step-start infinite;
+  font-weight: bold;
+  color: #9333ea;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.lyrics-box {
+  max-height: 180px; /* Ubah sesuai kebutuhan */
+  overflow-y: auto;
+  padding: 10px;
+  margin-top: 16px;
+  background: #fdf4ff;
+  border-radius: 12px;
+  border: 1px solid #e9d5ff;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+}
+
+.lyrics-box::-webkit-scrollbar {
+  width: 6px;
+}
+.lyrics-box::-webkit-scrollbar-thumb {
+  background: #d8b4fe;
+  border-radius: 4px;
+}
+
+.easter-lyrics {
+  font-size: 0.95rem;
+  color: #6b21a8;
+  line-height: 1.8;
+  font-style: italic;
+  font-family: monospace;
+  white-space: pre-line;
+}
+
+.typing-line {
+  display: flex;
+  align-items: center;
+}
+
+.typing-line .cursor {
+  animation: blink 1s step-start infinite;
+  font-weight: bold;
+  margin-left: 2px;
+  color: #9333ea;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #f9a8d4;
+  border-radius: 6px;
+}
+.modal-box-pinkblue::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-box-pinkblue::-webkit-scrollbar-thumb {
+  background: #f9a8d4;
+  border-radius: 6px;
+}
+.music-list::-webkit-scrollbar,
+.game-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.music-list::-webkit-scrollbar-thumb,
+.game-list::-webkit-scrollbar-thumb {
+  background: #f9a8d4;
+  border-radius: 6px;
+}
+
+
+.cursor-sparkle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #f9a8d4, #c084fc);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  animation: sparkleFloat 0.8s ease-out forwards;
+  box-shadow: 0 0 8px rgba(249, 168, 212, 0.6);
+}
+
+@keyframes sparkleFloat {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(10px, -20px) scale(0.5);
+  }
+}
+
+body {
+  cursor: none !important;
+}
+
+.image-cursor {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+*,
+*:hover,
+*:active,
+*:focus {
+  cursor: none !important;
+}
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+
+  .emoji-cursor,
+  .image-cursor {
+    display: none !important;
+  }
+}
+
+  </style>
+</head>
+<body>
+<img src="https://media.tenor.com/cm7hXwcSyiYAAAAj/cute-dance.gif" class="image-cursor" id="custom-cursor">
+
+<script>
+const imgCursor = document.getElementById("custom-cursor");
+document.addEventListener("mousemove", (e) => {
+  imgCursor.style.left = e.pageX + "px";
+  imgCursor.style.top = e.pageY + "px";
+});
+</script>
+
+
+<script>
+document.addEventListener("mousemove", function(e) {
+  const sparkle = document.createElement("div");
+  sparkle.className = "cursor-sparkle";
+  sparkle.style.left = `${e.pageX}px`;
+  sparkle.style.top = `${e.pageY}px`;
+  document.body.appendChild(sparkle);
+  setTimeout(() => sparkle.remove(), 800);
+});
+</script>
+
+
+<audio id="musicPlayer" preload="none"></audio>
+
+  <!-- CANVAS BINTANG -->
+  <canvas id="space-stars"></canvas>
+  <canvas id="meteor-canvas"></canvas>
+
+  <!-- BIO CARD -->
+  <div class="card">
+  <div class="card-header">
+    <img src="https://i.pinimg.com/originals/28/54/a0/2854a0fb2f212883bbe733a2db09a87e.gif" class="profile-banner" />
+    <img class="mini-avatar rainbow-border" src="https://i.pinimg.com/originals/09/4b/93/094b933ad995a98ae434a573860fc805.gif" />
+    <div class="card-username">⋆｡‧˚ʚ 𝓚é𝔂𝔂- ɞ˚‧｡⋆</div>
+    <div class="card-tags">Programmer</div>
+  </div>
+
+  <div class="card-about">
+    <p>I am cool and I like ayam geprek<br>24/7 waiting for her</p>
+  </div>
+
+  <div class="socials">
+    <a href="https://instagram.com/hwavzell" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram">
+    </a>
+    <a href="https://www.tiktok.com/@hwavzell" target="_blank">
+  <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok" />
+</a>
+
+    <a href="https://github.com/dimskyzo" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub">
+    </a>
+  </div>
+<div class="music-player">
+  <div class="song-title" id="songTitle">♪ Reminder - The Weekand</div>
+  <input type="range" id="progress" value="0">
+  <button class="play-btn" onclick="togglePlay()">▶</button>
+</div>
+
+
+  <div class="see-full">
+    <button onclick="openModal()">See Full</button>
+  </div>
+</div>
+</div>
+<audio id="audio" src="The Weeknd - Reminder (sped up_tiktok version) Lyrics _ got a sweet asian chick she go lo mein [ESBefWYAKCk].mp3"></audio>
+
+<!-- Full Bio Modal -->
+<div class="modal" id="fullBio">
+  <div class="modal-content modal-box-pinkblue">
+
+    <span class="close-btn" onclick="closeModal()">×</span>
+    <div class="header-section">
+      <img src="https://i.pinimg.com/originals/28/54/a0/2854a0fb2f212883bbe733a2db09a87e.gif" class="profile-banner" />
+      <img class="mini-avatar rainbow-border" src="https://i.pinimg.com/originals/09/4b/93/094b933ad995a98ae434a573860fc805.gif">
+      <div class="modal-username">⋆｡‧˚ʚ 𝓚é𝔂𝔂- ɞ˚‧｡⋆</div>
+      <div class="modal-tags">Programmer • zie/xie 🧷🌈✨</div>
+    </div>
+
+    <div class="modal-section">
+      <h3>About Me</h3>
+      <p>I make stuff.
+I like late night talks, warm noodles, and music that hugs.
+That’s pretty much it.</p>
+    </div>
+
+    <div class="modal-section">
+      <h3>Spawn Date</h3>
+      <p>May 27</p>
+    </div>
+    
+
+    <div class="modal-section">
+      <h3>More?</h3>
+      <div class="connection-links">
+  <div class="connection-links">
+  <div class="fav-container">
+  <span class="fav-emoji">💙</span>
+<a href="#" class="fav-bubble-button" id="fav-person">Fav Person</a>
+
+
+</div>
+
+<!-- Easter Egg Modal -->
+<div id="easter-egg-modal" class="easter-modal hidden">
+  <div class="easter-content modal-content">
+
+    <h2>🌸 You're my favorite person</h2>
+    <p>You always make my day better. Thank you for being you 💗</p>
+    <img src="https://i.imgur.com/Est7txJ.gif" class="easter-photo" alt="Fav Person">
+<div class="lyrics-box">
+  <div id="lyric-typing" class="easter-lyrics"></div>
+</div>
+
+
+  </div>
+</div>
+
+<audio id="love-audio" src="Rex Orange County - Happiness (Official Audio) [dstuitW8PWM].mp3"></audio>
+
+  <div class="fav-container">
+  <span class="fav-emoji" onclick="openFoodModal()">🍱</span>
+  <a href="#" class="fav-bubble-button" onclick="openFoodModal()">Food</a>
+</div>
+
+
+  <div class="fav-container">
+  <span class="fav-emoji" onclick="openMusicModal()">🎸</span>
+  <a href="#" class="fav-bubble-button" onclick="openMusicModal()">Music</a>
+</div>
+
+
+  <div class="fav-container">
+  <span class="fav-emoji" onclick="openPictModal()">📸</span>
+  <a href="#" class="fav-bubble-button" onclick="openPictModal()">Pict</a>
+</div>
+
+
+
+  <div class="fav-container">
+  <span class="fav-emoji" onclick="openGameModal()">🎮</span>
+  <a href="#" class="fav-bubble-button" onclick="openGameModal()">Game</a>
+</div>
+
+
+
+    </div>
+  </div>
+</div>
+<div class="modal" id="favPersonModal">
+  <div class="modal-content modal-box-pinkblue">
+
+    <span class="close-btn" onclick="closeFavModal()">×</span>
+    <div class="header-section">
+      <h3 style="margin-bottom: 1rem; color: #be185d;">My Favorite Person 💖</h3>
+      <div class="fav-gallery">
+        <img src="https://media1.tenor.com/m/cYX6nK5MBakAAAAC/genshin-impact-furina.gif" />
+        <img src="https://media1.tenor.com/m/Kv2WhFZmsmgAAAAd/genshin-impact-kokomi.gif" />
+        <img src="https://media1.tenor.com/m/Oc32th_EbTYAAAAd/inazuma-mihoyo.gif" />
+        <!-- Tambah foto sesuka kamu -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Food -->
+<div class="modal" id="foodModal">
+  <div class="modal-content modal-box-pinkblue">
+
+    <span class="close-btn" onclick="closeFoodModal()">×</span>
+    <div class="header-section">
+      <h3 style="margin-bottom: 1rem; color: #be185d;">Favorite Foods 🍱</h3>
+      <div class="food-gallery">
+        <div class="food-item">
+          <img src="https://i.pinimg.com/1200x/75/e9/bd/75e9bdc7c3deea1816e99fbd67f5f1cf.jpg" alt="Ayam Geprek">
+          <p>Ayam Geprek</p>
+        </div>
+        <div class="food-item">
+          <img src="https://i.pinimg.com/1200x/fe/1b/af/fe1baf735892c0057db2614e992c49ff.jpg" alt="Chicken Noodle">
+          <p>Chicken Noodle</p>
+        </div>
+        <div class="food-item">
+          <img src="https://i.pinimg.com/736x/f7/73/27/f77327110f69eec78c8882e5942c120e.jpg" alt="Martabak Manis">
+          <p>Martabak Manis</p>
+        </div>
+        <div class="food-item">
+          <img src="https://i.pinimg.com/736x/0e/d1/d1/0ed1d13fce2fa3e59d3dca5a03f899b9.jpg" alt="Spicy Dumpling">
+          <p>Spicy Dumpling</p>
+        </div>
+        <div class="food-item">
+          <img src="https://i.pinimg.com/736x/77/a4/4f/77a44f6ea3a69aece293636c10f6d176.jpg" alt="Dimsum">
+          <p>Dimsum</p>
+        </div>
+        <div class="food-item">
+          <img src="https://i.pinimg.com/736x/31/32/4e/31324ec85015095ac010f7276a802109.jpg" alt="Cireng">
+          <p>Cireng</p>
+        </div>
+        <div class="food-item">
+          <img src="https://i.pinimg.com/736x/b4/f5/e9/b4f5e979dab6129eb2dbe2fd39d299a5.jpg" alt="Sushi">
+          <p>Sushi</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Music Modal with Audio Player -->
+<audio id="musicPlayer" preload="none"></audio>
+
+<div class="modal" id="musicModal">
+  <div class="modal-content modal-box-pinkblue">
+
+    <span class="close-btn" onclick="closeMusicModal()">×</span>
+    <div class="header-section">
+      <h3 style="margin-bottom: 1rem; color: #be185d;">🎵 Favorite Music</h3>
+    </div>
+
+    <div class="music-list">
+      <!-- Template Music Item -->
+      <div class="music-item" data-src="Chase Atlantic - _Consume_ feat. Goon Des Garcons (Official Audio) [oCdXuomafSU].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d0000b2735a0c2870f4f309e382d1fad6" alt="Chase Atlantic">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Chase Atlantic – Consume</div>
+      </div>
+      <div class="music-item" data-src="Aziz Hedra - Somebody’s Pleasure (Official Audio) [PD0hHwbunXI].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i0.wp.com/suarausu.or.id/wp-content/uploads/2023/04/somebodys-pleasure.jpg?fit=708%2C622&ssl=1" alt="Somebody's Pleasure">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Aziz Hedra – Somebody’s Pleasure</div>
+      </div>
+      <div class="music-item" data-src="Rex Orange County - Best Friend (Official Audio) [OqBuXQLR4Y8].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d0000b273ff874602e13e9181c26e5f01" alt="Rex Orange County">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Rex Orange County – Best Friend</div>
+      </div>
+      <div class="music-item" data-src="Justin Timberlake - Mirrors (Official Audio) [U41KPUfOSFk].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d0000b273db1d1cdc927a07825a2ed244" alt="Noya Clarisa">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Justin Timberlake – Mirrors</div>
+      </div>
+      <div class="music-item" data-src="24kGoldn - Mood Remix (Lyrics) ft. Justin Bieber, J Balvin, Iann Dior [f1J4dRTMy9A].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d0000b27360036f58bbb4b25a7a6f2712" alt="Justin Bieber">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Justin Bieber – Mood (Remix)</div>
+      </div>
+      <div class="music-item" data-src="Ariana Grande - we can't be friends (wait for your love) (lyric visualizer) [UdRAXWNvjzE].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://images.genius.com/787345ba18db728c2de68d4e72502728.1000x1000x1.png" alt="Ariana Grande">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Ariana Grande – We Can't Be Friends</div>
+      </div>
+      <div class="music-item" data-src="Taylor Swift - Style (Audio) [66TQBtlRKc4].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d00001e026908b965e59de1f8fe30a1e3" alt="Taylor Swift">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Taylor Swift – Style</div>
+      </div>
+      <div class="music-item" data-src="Maroon 5 - One More Night (Lyric Video) [7CPYoGtI75Q].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d0000b273ce7d499847da02a9cbd1c084" alt="Maroon 5">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Maroon 5 – One More Night</div>
+      </div>
+      <div class="music-item" data-src="That’s What I Like - Bruno Mars [Lyrics_Vietsub] [rb7Il7gnEFs].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d00001e02232711f7d66a1e19e89e28c5" alt="Bruno Mars">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Bruno Mars – That's What I Like</div>
+      </div>
+      <div class="music-item" data-src="SLOW DANCING IN THE DARK [LUXu4aTnK7E].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d0000b27360ba1d6104d0475c7555a6b2" alt="Joji">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Joji – SLOW DANCING IN THE DARK</div>
+      </div>
+      <div class="music-item" data-src="Ed Sheeran - Perfect [cNGjD0VG4R8].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d0000b273ba5db46f4b838ef6027e6f96" alt="Ed Sheeran">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Ed Sheeran – Perfect</div>
+      </div>
+      <div class="music-item" data-src="Shawn Mendes - Imagination (Lyrics) [FhQn0tqgTp4].mp3">
+        <div class="cover-wrapper">
+          <img class="music-cover" src="https://i.scdn.co/image/ab67616d00001e022d6a4125a1d62dc6185f74ea" alt="Shawn Mendes">
+          <div class="play-overlay">▶</div>
+        </div>
+        <div class="title">Shawn Mendes – Imagination</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal untuk Album -->
+<div id="pict-modal">
+  <div class="pict-modal-content">
+    <span class="pict-close" onclick="closePictModal()">&times;</span>
+    <h2>Pilih Album</h2>
+    <div class="album-list-pict">
+      <div class="album-card-pict" onclick="openAlbum(1)">My Kisah</div>
+      <div class="album-card-pict" onclick="openAlbum(2)">Ngayap</div>
+      <div class="album-card-pict" onclick="openAlbum(3)">With Her</div>
+      <div class="album-card-pict" onclick="openAlbum(4)">Random</div>
+    </div>
+
+    <div id="album-photos-pict" class="album-photos-pict album-photos-scroll" style="display: none;">
+
+      <h3 id="album-title-pict">Album</h3>
+      <div class="photo-grid-pict" id="photo-grid-pict"></div>
+    </div>
+  </div>
+</div>
+<div id="full-image-viewer" onclick="closeFullImage()">
+  <span>&times;</span>
+  <img src="" id="full-image" />
+</div>
+
+<!-- Game -->
+<div class="modal" id="gameModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeGameModal()">×</span>
+    <div class="header-section">
+      <h3 style="margin-bottom: 1rem; color: #be185d;">🕹️ Games I Play</h3>
+    </div>
+
+    <div class="game-list">
+      <div class="game-item">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrIOTjQn295QJG51JoDtCe-WZisHNK2j2d8g&s" alt="Genshin">
+        <div>
+          <div class="game-name">Genshin Impact</div>
+          <div class="game-id">UID: 894250003</div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://play-lh.googleusercontent.com/wEgle763Zm8qmttBKYmVyOJ65h4xNOHTgnPXy6-wo1GygMiU_QwGCX9OvzTZB2I82wg=w240-h480-rw" alt="Wuwa">
+        <div>
+          <div class="game-name">Wuthering Waves</div>
+          <div class="game-id">ID: 900836492</div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://i.pinimg.com/1200x/39/dc/66/39dc66a4fbaa85dcd12a49f216b60ead.jpg" alt="Valorant">
+        <div>
+          <div class="game-name">Valorant</div>
+          <div class="game-id">ID: hwavzell#2729</div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://i.pinimg.com/736x/dc/c7/78/dcc778e5afc9beac27a7541153e294f2.jpg" alt="ML">
+        <div>
+          <div class="game-name">Mobile Legends</div>
+          <div class="game-id">ID: 305072229 (9563)</div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://i.pinimg.com/736x/0c/21/52/0c215277a5b9286286656f65318057f8.jpg" alt="Roblox">
+        <div>
+          <div class="game-name">Roblox</div>
+          <div class="game-id">@keyyz_</div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://i.pinimg.com/736x/33/ee/f5/33eef535b2ffa74da6a14c01834f2932.jpg" alt="Minecraft">
+        <div>
+          <div class="game-name">Minecraft</div>
+          <div class="game-id"></div>
+        </div>
+      </div>
+      
+      <div class="game-item">
+        <img src="https://play-lh.googleusercontent.com/EwolwmpxNBLGQgDW4wRJy1TkMjFE5-7sE93I0gpLHSc49oJy4TON8AGHBaHdFIA8nRU=w600-h300-pc0xffffff-pd" alt="PGR">
+        <div>
+          <div class="game-name">Punishing: Gray Raven</div>
+          <div class="game-id">ID: Kéyy</div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://forums.terraria.org/index.php?attachments/icon-png.280655/" alt="Terraria">
+        <div>
+          <div class="game-name">Terraria</div>
+          
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://archive.org/download/left_4_dead_2_original_game_soundtrack/cover.jpg" alt="L4D2">
+        <div>
+          <div class="game-name">Left 4 Dead 2</div>
+          <div class="game-id"></div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://upload.wikimedia.org/wikipedia/en/0/00/Resident_Evil_Logo.svg" alt="RE">
+        <div>
+          <div class="game-name">Resident Evil</div>
+          <div class="game-id">IGN: KeyxRE</div>
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFbv6fmw7sY2lNcwomUHcmU9jjHzyp3GFYeQ&s" alt="GTA V">
+        <div>
+          <div class="game-name">GTA V</div>
+          
+        </div>
+      </div>
+      <div class="game-item">
+        <img src="https://sm.ign.com/ign_nordic/cover/p/phasmophob/phasmophobia_mtjz.jpg" alt="Phasmo">
+        <div>
+          <div class="game-name">Phasmophobia</div>
+          <div class="game-id"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Fav person pict -->
+<script>
+  const favModal = document.getElementById("favPersonModal");
+
+  function openFavModal() {
+    favModal.style.display = "flex";
+  }
+
+  function closeFavModal() {
+    favModal.style.display = "none";
+  }
+
+  // klik di luar modal buat nutup
+  window.addEventListener("click", function (e) {
+    if (e.target === favModal) {
+      closeFavModal();
+    }
+  });
+</script>
+
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  const fav = document.getElementById("fav-person");
+  const favModal = document.getElementById("favPersonModal");
+  const easterModal = document.getElementById("easter-egg-modal");
+  const loveAudio = document.getElementById("love-audio");
+  let pressTimer, longPress = false;
+
+  if (fav && favModal && easterModal) {
+    // PC
+    fav.addEventListener("mousedown", startHold);
+    fav.addEventListener("mouseup", stopHold);
+    fav.addEventListener("mouseleave", stopHold);
+
+    // HP
+    fav.addEventListener("touchstart", startHold);
+    fav.addEventListener("touchend", function (e) {
+      stopHold();
+      if (!longPress) openFavModal();
+    });
+
+    // klik biasa (PC) = buka modal
+    fav.addEventListener("click", function () {
+      if (!longPress) openFavModal();
+    });
+
+    function startHold() {
+      longPress = false;
+      pressTimer = setTimeout(() => {
+        longPress = true;
+        triggerEasterEgg();
+      }, 1200);
+    }
+
+    function stopHold() {
+      clearTimeout(pressTimer);
+    }
+
+    // klik luar easter egg buat nutup
+    window.addEventListener("click", function (e) {
+      if (e.target === easterModal) {
+        easterModal.classList.add("hidden");
+        pauseAllAudio();
+      }
+    });
+
+    function triggerEasterEgg() {
+      pauseAllAudio();
+      if (loveAudio) {
+        loveAudio.volume = 0.5;
+        loveAudio.play();
+      }
+
+      easterModal.classList.remove("hidden");
+
+      // bunga jatuh
+      for (let i = 0; i < 25; i++) {
+        const flower = document.createElement("div");
+        flower.className = "flower";
+        flower.style.setProperty('--x', Math.random());
+        document.body.appendChild(flower);
+        setTimeout(() => flower.remove(), 3000);
+      }
+
+      // ketik huruf per huruf
+      const lyrics = ["hey..." ,    "you don't need to fix everything or always be strong.",
+    "some days, just existing is enough — and you've done that so beautifully.",
+    "you’ve grown, you've tried, you've shown up, even when it was hard.",
+    "and that alone is something to be proud of."
+  ];
+
+
+      const lyricBox = document.getElementById("lyric-typing");
+      lyricBox.innerHTML = "";
+
+      let lineIndex = 0;
+      let charIndex = 0;
+      let typingLine;
+
+      function typeLetter() {
+  if (lineIndex < lyrics.length) {
+    const currentText = lyrics[lineIndex];
+
+    if (charIndex === 0) {
+      const oldCursor = lyricBox.querySelector(".cursor");
+      if (oldCursor) oldCursor.remove();
+
+      typingLine = document.createElement("div");
+      typingLine.className = "typing-line";
+
+      const fullSpan = document.createElement("span");
+      fullSpan.className = "full-line";
+
+      const textNode = document.createTextNode(""); // nanti diisi
+      const cursorSpan = document.createElement("span");
+      cursorSpan.className = "cursor";
+      cursorSpan.textContent = "|";
+
+      fullSpan.appendChild(textNode);
+      fullSpan.appendChild(cursorSpan);
+      typingLine.appendChild(fullSpan);
+      lyricBox.appendChild(typingLine);
+    }
+
+    const fullSpan = typingLine.querySelector(".full-line");
+    fullSpan.firstChild.textContent = currentText.slice(0, charIndex);
+
+    lyricBox.parentElement.scrollTop = lyricBox.parentElement.scrollHeight;
+
+    if (charIndex < currentText.length) {
+      charIndex++;
+      setTimeout(typeLetter, 100);
+    } else {
+      lineIndex++;
+      charIndex = 0;
+      setTimeout(typeLetter, 1200);
+    }
+  }
+}
+
+
+
+
+      setTimeout(typeLetter, 1000);
+    }
+  }
+});
+</script>
+
+
+
+
+
+
+
+<!-- Food -->
+<script>
+  const foodModal = document.getElementById("foodModal");
+
+  function openFoodModal() {
+    foodModal.style.display = "flex";
+  }
+
+  function closeFoodModal() {
+    foodModal.style.display = "none";
+  }
+
+  window.addEventListener("click", function(e) {
+    if (e.target === foodModal) {
+      closeFoodModal();
+    }
+  });
+</script>
+
+<!-- Music -->
+<script>
+  const musicModal = document.getElementById("musicModal");
+
+  function openMusicModal() {
+    musicModal.style.display = "flex";
+  }
+
+  function closeMusicModal() {
+    musicModal.style.display = "none";
+  }
+
+  window.addEventListener("click", function(e) {
+    if (e.target === musicModal) {
+      closeMusicModal();
+    }
+  });
+</script>
+<script>
+  const musicPlayer = document.getElementById("musicPlayer");
+  const musicItems = document.querySelectorAll(".music-item");
+  let currentPlaying = null;
+
+  musicItems.forEach(item => {
+    const cover = item.querySelector(".music-cover");
+    const playOverlay = item.querySelector(".play-overlay");
+    const audioSrc = item.getAttribute("data-src");
+
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      // Kalau klik yang sama & lagi main → pause
+      if (currentPlaying === item && !musicPlayer.paused) {
+        musicPlayer.pause();
+        playOverlay.textContent = "▶";
+        return;
+      }
+
+      // Pause sebelumnya
+      if (currentPlaying) {
+        currentPlaying.querySelector(".play-overlay").textContent = "▶";
+      }
+
+      // Set lagu baru
+      pauseAllAudio(); // ⛔ stop semua sebelum play
+      musicPlayer.src = audioSrc;
+      musicPlayer.play();
+      playOverlay.textContent = "⏸";
+      currentPlaying = item;
+    });
+
+    // Reset icon saat lagu selesai
+    musicPlayer.addEventListener("ended", () => {
+      if (currentPlaying) {
+        currentPlaying.querySelector(".play-overlay").textContent = "▶";
+        currentPlaying = null;
+      }
+    });
+  });
+</script>
+
+<!-- Pict album -->
+<script>
+    function viewFullImage(src) {
+    const viewer = document.getElementById("full-image-viewer");
+    const image = document.getElementById("full-image");
+    image.src = src;
+    viewer.style.display = "flex";
+  }
+
+  function closeFullImage() {
+    document.getElementById("full-image-viewer").style.display = "none";
+  }
+  function openPictModal() {
+    document.getElementById("pict-modal").style.display = "block";
+    document.getElementById("album-photos-pict").style.display = "none";
+  }
+
+  function closePictModal() {
+    document.getElementById("pict-modal").style.display = "none";
+  }
+
+  function openAlbum(albumNumber) {
+    const albumTitle = document.getElementById("album-title-pict");
+    const photoGrid = document.getElementById("photo-grid-pict");
+    const albumTitles = {
+  1: "My Kisah",
+  2: "Ngayap",
+  3: "With Indana Nuriyana",
+  4: "Random"
+};
+albumTitle.innerText = albumTitles[albumNumber] || "Album";
+
+    photoGrid.innerHTML = "";
+
+    const albumPhotos = {
+      1: ["https://i.pinimg.com/1200x/06/14/14/0614148bd80d02ca75517404b46e5885.jpg","https://i.pinimg.com/1200x/a3/34/f3/a334f34fadee681943c9f6bc2d1e9b37.jpg" ,"https://i.pinimg.com/1200x/ce/d1/7f/ced17fc5546f1cdc077b2ae7090b42ce.jpg", "https://i.pinimg.com/736x/64/a0/d6/64a0d65c322de9888269ae35549a9b47.jpg" ,"https://i.pinimg.com/736x/5f/23/88/5f238886740814f09a2e2f459e3e1938.jpg"],
+      2: ["https://i.imgur.com/tT3qDhx.jpeg", "https://i.imgur.com/q8Ysnt7.jpeg", "https://i.imgur.com/YxnmUVY.jpeg", "https://i.imgur.com/qRDMyhO.jpeg", "https://i.imgur.com/dwKOgs2.jpeg", "https://i.imgur.com/MVJBYej.jpeg"],
+      3: ["https://i.imgur.com/IAh9bnw.png", "https://i.imgur.com/XdjXpAl.png", "https://i.imgur.com/6lsB0Eb.png", "https://i.imgur.com/I2kRia2.png", "https://i.imgur.com/LRv5zrT.png", "https://i.imgur.com/UuPIaSz.png",
+          "https://i.imgur.com/tNymqeQ.png", "https://i.imgur.com/Kv7OYNd.png", "https://i.imgur.com/1padvZj.png", "https://i.imgur.com/uHF6eUq.png", "https://i.imgur.com/agYXm2b.png", "https://i.imgur.com/EparTPd.png",
+          "https://i.imgur.com/SllLllX.png", "https://i.imgur.com/tLPDTcx.png"
+      ],
+      4: ["https://i.imgur.com/t6RN9lc.png", "https://i.imgur.com/9eYuPfO.png"],
+    };
+
+    albumPhotos[albumNumber].forEach(url => {
+      const img = document.createElement("img");
+      img.src = url;
+      img.onclick = () => viewFullImage(url); // tambahin ini
+      photoGrid.appendChild(img);
+    });
+
+    document.getElementById("album-photos-pict").style.display = "block";
+  }
+</script>
+
+<!-- Game -->
+<script>
+function openGameModal() {
+  document.getElementById("gameModal").style.display = "flex";
+}
+function closeGameModal() {
+  document.getElementById("gameModal").style.display = "none";
+}
+</script>
+
+<!-- Pause All Audio Function -->
+<script>
+  function pauseAllAudio() {
+    document.querySelectorAll("audio").forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+  }
+</script>
+
+
+<!-- Music Awal -->
+<script>
+  const audio = document.getElementById("audio");
+  const playBtn = document.querySelector(".play-btn");
+  const progress = document.getElementById("progress");
+
+  let isPlaying = false;
+
+  function togglePlay() {
+    if (!isPlaying) {
+      pauseAllAudio(); // ⛔ stop semua sebelum play
+      audio.play();
+      playBtn.textContent = "⏸";
+    } else {
+      audio.pause();
+      playBtn.textContent = "▶";
+    }
+    isPlaying = !isPlaying;
+  }
+
+  audio.addEventListener("timeupdate", () => {
+    if (!audio.duration) return;
+    const value = (audio.currentTime / audio.duration) * 100;
+    progress.value = value;
+  });
+
+  progress.addEventListener("input", () => {
+    if (!audio.duration) return;
+    const time = (progress.value / 100) * audio.duration;
+    audio.currentTime = time;
+  });
+</script>
+
+<!-- Full Bio -->
+<script>
+  const modal = document.getElementById("fullBio");
+
+  function openModal() {
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  // Optional: close when clicking outside
+  window.onclick = function(e) {
+    if (e.target == modal) {
+      closeModal();
+    }
+  }
+</script>
+
+  <!-- SCRIPT BINTANG -->
+  <script>
+    const canvas = document.getElementById('space-stars');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let stars = Array.from({ length: 100 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.5,
+      alpha: Math.random(),
+      delta: Math.random() * 0.02
+    }));
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let s of stars) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        ctx.fill();
+        s.alpha += s.delta;
+        if (s.alpha <= 0 || s.alpha >= 1) s.delta = -s.delta;
+      }
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+  </script>
+
+  <!-- SCRIPT METEOR -->
+  <script>
+    const meteorCanvas = document.getElementById("meteor-canvas");
+    const mtx = meteorCanvas.getContext("2d");
+    meteorCanvas.width = window.innerWidth;
+    meteorCanvas.height = window.innerHeight;
+
+    let meteors = [];
+
+    function createMeteor() {
+      meteors.push({
+        x: Math.random() * window.innerWidth,
+        y: -100,
+        length: Math.random() * 80 + 30,
+        speed: Math.random() * 4 + 3,
+        opacity: Math.random() * 0.5 + 0.3
+      });
+    }
+
+    function drawMeteors() {
+      mtx.clearRect(0, 0, meteorCanvas.width, meteorCanvas.height);
+      meteors.forEach((m, i) => {
+        mtx.beginPath();
+        mtx.moveTo(m.x, m.y);
+        mtx.lineTo(m.x + m.length, m.y + m.length);
+        mtx.strokeStyle = `rgba(255, 255, 255, ${m.opacity})`;
+        mtx.lineWidth = 2;
+        mtx.stroke();
+        m.x += m.speed;
+        m.y += m.speed;
+        if (m.x > window.innerWidth || m.y > window.innerHeight) {
+          meteors.splice(i, 1);
+        }
+      });
+      requestAnimationFrame(drawMeteors);
+    }
+
+    setInterval(createMeteor, 1200);
+    drawMeteors();
+  </script>
+
+</body>
+</html>
