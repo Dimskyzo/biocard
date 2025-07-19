@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Kéyy Galaxy Card</title>
+  <title>Kéyy Bio Card</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -627,15 +627,30 @@
 
 
 .album-photos-pict {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+
   text-align: center;
 }
 
+
 .photo-grid-pict {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   gap: 12px;
+  padding: 0 16px; /* tambahin padding kiri kanan */
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  justify-items: center; /* ⭐ CENTER tiap item */
   margin-top: 14px;
 }
+
+
+
 
 
 .photo-grid-pict img {
@@ -654,12 +669,13 @@
 }
 
 .album-photos-scroll {
-  max-height: 300px;
+  max-height: 60vh;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 6px;
   margin-top: 10px;
+  scrollbar-width: none; /* Firefox */
 }
-
 .album-photos-scroll::-webkit-scrollbar {
   width: 6px;
 }
@@ -667,6 +683,7 @@
   background: #f9a8d4;
   border-radius: 6px;
 }
+
 
 /* Fullscreen Image Viewer */
 #full-image-viewer {
@@ -1095,14 +1112,14 @@ document.addEventListener("mousemove", function(e) {
     </a>
   </div>
 <div class="music-player">
-  <div class="song-title" id="songTitle">♪ Reminder - The Weekand</div>
+  <div class="song-title" id="songTitle">♪ Reminder - The Weeknd</div>
   <input type="range" id="progress" value="0">
   <button class="play-btn" onclick="togglePlay()">▶</button>
 </div>
 
 
   <div class="see-full">
-    <button onclick="openModal()">See Full</button>
+    <button onclick="openModal()">View More</button>
   </div>
 </div>
 </div>
@@ -1195,7 +1212,10 @@ That’s pretty much it.</p>
 
     <span class="close-btn" onclick="closeFavModal()">×</span>
     <div class="header-section">
-      <h3 style="margin-bottom: 1rem; color: #be185d;">My Favorite Person 💖</h3>
+      <h3 style="margin-bottom: 1rem; color: #be185d;">
+  My Favorite Person <span id="trigger-love" style="cursor: pointer;">💖</span>
+</h3>
+
       <div class="fav-gallery">
         <img src="https://media1.tenor.com/m/cYX6nK5MBakAAAAC/genshin-impact-furina.gif" />
         <img src="https://media1.tenor.com/m/Kv2WhFZmsmgAAAAd/genshin-impact-kokomi.gif" />
@@ -1371,6 +1391,16 @@ That’s pretty much it.</p>
   <span>&times;</span>
   <img src="" id="full-image" />
 </div>
+<script>
+  // Tutup modal pict kalau klik di luar .pict-modal-content
+  window.addEventListener("click", function (e) {
+    const pictModal = document.getElementById("pict-modal");
+    const pictContent = document.querySelector(".pict-modal-content");
+    if (e.target === pictModal) {
+      closePictModal();
+    }
+  });
+</script>
 
 <!-- Game -->
 <div class="modal" id="gameModal">
@@ -1379,6 +1409,15 @@ That’s pretty much it.</p>
     <div class="header-section">
       <h3 style="margin-bottom: 1rem; color: #be185d;">🕹️ Games I Play</h3>
     </div>
+<script>
+  // Tutup modal kalau klik di luar modal-content
+  window.addEventListener("click", function (e) {
+    const gameModal = document.getElementById("gameModal");
+    if (e.target === gameModal) {
+      closeGameModal();
+    }
+  });
+</script>
 
     <div class="game-list">
       <div class="game-item">
@@ -1494,40 +1533,29 @@ That’s pretty much it.</p>
 <script>
 window.addEventListener("DOMContentLoaded", function () {
   const fav = document.getElementById("fav-person");
+  const loveBtn = document.getElementById("trigger-love"); // ID tombol 💖
   const favModal = document.getElementById("favPersonModal");
   const easterModal = document.getElementById("easter-egg-modal");
   const loveAudio = document.getElementById("love-audio");
   let pressTimer, longPress = false;
 
+  if (loveBtn) {
+  loveBtn.addEventListener("click", function () {
+    triggerEasterEgg(); // langsung jalanin modal easter egg
+  });
+}
+
   if (fav && favModal && easterModal) {
-    // PC
-    fav.addEventListener("mousedown", startHold);
-    fav.addEventListener("mouseup", stopHold);
-    fav.addEventListener("mouseleave", stopHold);
+    // HP & Desktop: klik/tap langsung buka modal fav person
+fav.addEventListener("click", openFavModal);
+fav.addEventListener("touchend", function (e) {
+  e.preventDefault(); // <- ini penting biar gak diabaikan di HP
+  openFavModal();
+});
 
-    // HP
-    fav.addEventListener("touchstart", startHold);
-    fav.addEventListener("touchend", function (e) {
-      stopHold();
-      if (!longPress) openFavModal();
-    });
 
-    // klik biasa (PC) = buka modal
-    fav.addEventListener("click", function () {
-      if (!longPress) openFavModal();
-    });
 
-    function startHold() {
-      longPress = false;
-      pressTimer = setTimeout(() => {
-        longPress = true;
-        triggerEasterEgg();
-      }, 1200);
-    }
 
-    function stopHold() {
-      clearTimeout(pressTimer);
-    }
 
     // klik luar easter egg buat nutup
     window.addEventListener("click", function (e) {
@@ -1556,11 +1584,17 @@ window.addEventListener("DOMContentLoaded", function () {
       }
 
       // ketik huruf per huruf
-      const lyrics = ["hey..." ,    "you don't need to fix everything or always be strong.",
-    "some days, just existing is enough — and you've done that so beautifully.",
-    "you’ve grown, you've tried, you've shown up, even when it was hard.",
-    "and that alone is something to be proud of."
-  ];
+      const lyrics = [
+  "───────── ୨୧ ─────────",
+  "ㅤㅤㅤㅤawoo nanaaa", // tambahin spasi biar tengah
+  "───────── ୨୧ ─────────",
+  "you don't need to fix everything or always be strong.",
+  "some days, just existing is enough — and you've done that so beautifully.",
+  "you’ve grown, you've tried, you've shown up, even when it was hard.",
+  "and that alone is something to be proud of.",
+  "﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌﹌"
+];
+
 
 
       const lyricBox = document.getElementById("lyric-typing");
@@ -1741,8 +1775,8 @@ albumTitle.innerText = albumTitles[albumNumber] || "Album";
     photoGrid.innerHTML = "";
 
     const albumPhotos = {
-      1: ["https://i.pinimg.com/1200x/06/14/14/0614148bd80d02ca75517404b46e5885.jpg","https://i.pinimg.com/1200x/a3/34/f3/a334f34fadee681943c9f6bc2d1e9b37.jpg" ,"https://i.pinimg.com/1200x/ce/d1/7f/ced17fc5546f1cdc077b2ae7090b42ce.jpg", "https://i.pinimg.com/736x/64/a0/d6/64a0d65c322de9888269ae35549a9b47.jpg" ,"https://i.pinimg.com/736x/5f/23/88/5f238886740814f09a2e2f459e3e1938.jpg"],
-      2: ["https://i.imgur.com/tT3qDhx.jpeg", "https://i.imgur.com/q8Ysnt7.jpeg", "https://i.imgur.com/YxnmUVY.jpeg", "https://i.imgur.com/qRDMyhO.jpeg", "https://i.imgur.com/dwKOgs2.jpeg", "https://i.imgur.com/MVJBYej.jpeg"],
+      1: ["https://i.pinimg.com/originals/95/7b/1e/957b1efdcf2a35716c5cc3876118f01c.gif","https://i.pinimg.com/1200x/a3/34/f3/a334f34fadee681943c9f6bc2d1e9b37.jpg" ,"https://i.pinimg.com/1200x/ce/d1/7f/ced17fc5546f1cdc077b2ae7090b42ce.jpg", "https://i.pinimg.com/736x/64/a0/d6/64a0d65c322de9888269ae35549a9b47.jpg" ,"https://i.pinimg.com/originals/90/61/3d/90613db626fc26da2f3ea0b5c216f1b3.gif"],
+      2: ["https://i.imgur.com/tT3qDhx.jpeg", "https://i.imgur.com/q8Ysnt7.jpeg", "https://i.imgur.com/YxnmUVY.jpeg", "https://i.imgur.com/qRDMyhO.jpeg", "https://i.imgur.com/dwKOgs2.jpeg", "https://i.imgur.com/VmusXhv.jpeg"],
       3: ["https://i.imgur.com/IAh9bnw.png", "https://i.imgur.com/XdjXpAl.png", "https://i.imgur.com/6lsB0Eb.png", "https://i.imgur.com/I2kRia2.png", "https://i.imgur.com/LRv5zrT.png", "https://i.imgur.com/UuPIaSz.png",
           "https://i.imgur.com/tNymqeQ.png", "https://i.imgur.com/Kv7OYNd.png", "https://i.imgur.com/1padvZj.png", "https://i.imgur.com/uHF6eUq.png", "https://i.imgur.com/agYXm2b.png", "https://i.imgur.com/EparTPd.png",
           "https://i.imgur.com/SllLllX.png", "https://i.imgur.com/tLPDTcx.png"
